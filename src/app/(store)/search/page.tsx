@@ -3,6 +3,7 @@ import { Product } from '@/data/types/products'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 interface SearchProps {
   searchParams: { q: string }
 }
@@ -21,15 +22,18 @@ export default async function Search({ searchParams }: SearchProps) {
   const products = await getSearchProducts(query)
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm">
-        Resultados para: <span className="font-semibold">{searchParams.q}</span>
-      </p>
+      <Suspense fallback={null}>
+        <p className="text-sm">
+          Resultados para: <span className="font-semibold">{query}</span>
+        </p>
+      </Suspense>
+
       <div className="grid grid-cols-3 gap-6">
         {products.map((product) => {
           return (
             <Link
               key={product.id}
-              href={product.slug}
+              href={`/product/${product.slug}`}
               className="group relative  rounded-lg bg-zinc-800 overflow-hidden flex justify-center items-end"
             >
               <Image
